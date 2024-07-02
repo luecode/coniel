@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface InputData {
   original: string;
@@ -69,7 +69,7 @@ export default function Home() {
     );
     const consumoDiario = inputData.consumo / 30;
     const consumoTotal = consumoDiario * days + inputData.ultimaLectura;
-    setTotalConsumo(Math.ceil(consumoTotal));
+    setTotalConsumo(Math.round(consumoTotal));
   };
 
   const clean = () => {
@@ -80,12 +80,23 @@ export default function Home() {
       consumo: 0,
       fechaUltimaLectura: "",
     });
+
+    setTotalConsumo(0);
   };
+
+  useEffect(() => {
+    if (inputData) {
+      calcularLectura();
+    }
+  }, [inputData]);
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <h1 className="text-6xl font-bold">Calculadora!</h1>
       <form action="">
         <div className="flex flex-col gap-4">
+          <Image src="/oficina.jpg" alt="logo" width={400} height={300} />
+
           <div>
             <input
               type="text"
@@ -128,7 +139,7 @@ export default function Home() {
             type="button"
             onClick={clean}
           >
-            Limpar
+            Limpiar
           </button>
         </div>
       </form>
